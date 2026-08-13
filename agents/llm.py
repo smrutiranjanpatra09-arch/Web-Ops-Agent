@@ -44,6 +44,15 @@ def _strip_code_fence(text: str) -> str:
     return "\n".join(lines).strip()
 
 
+def _parse_json_object(text: str) -> dict:
+    # some models append trailing content after a valid JSON object even with
+    # responseMimeType=application/json (e.g. a stray newline plus repeated
+    # text) - json.loads() rejects the whole string in that case even though
+    # the JSON itself is well-formed, so parse only the first JSON value and
+    # ignore whatever follows it.
+    return json.JSONDecoder().raw_decode(text)[0]
+
+
 def _call_gemini(system: str, user: str, max_tokens: int) -> str:
     # "gemini-flash-latest" is an alias, so this keeps working when Google
     # retires a specific dated model (pinned versions get 404'd for new keys).
@@ -146,7 +155,7 @@ def call_structured(system: str, user: str, max_tokens: int = 2000, *,
     try:
         raw = _call_gemini(system, user, max_tokens) if provider == "gemini" else _call_ollama(system, user, max_tokens)
         latency_ms = int((time.monotonic() - start) * 1000)
-        result = json.loads(_strip_code_fence(raw))
+        result = _parse_json_object(_strip_code_fence(raw))
         log.info(f"structured call completed via {provider}")
         _record_invocation(
             node=node, purpose=purpose, provider=provider, model_name=model_name,
