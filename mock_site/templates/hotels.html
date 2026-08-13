@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ city }} Hotels — TripStay</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  {% import "_chrome.html" as chrome %}
+  {{ chrome.topbar() }}
+  <div class="container">
+    <div class="breadcrumb"><a href="/">&larr; Back to destinations</a></div>
+    <h1 class="page-title">Hotels in {{ city_label }}</h1>
+    <div class="result-count">{{ hotels|length }} properties found for 20 Dec 2026 &middot; 1 night &middot; 2 Adults</div>
+
+    <div class="filter-bar">
+      <span class="filter-chip active" data-filter="all">All Properties</span>
+      <span class="filter-chip" data-filter="available">Available Only</span>
+      <span class="filter-chip" data-filter="rating">4+ Rating</span>
+      <span class="filter-chip" data-filter="offers">With Offers</span>
+      <div class="sort-control">
+        Sort by
+        <select data-sort>
+          <option value="default">Recommended</option>
+          <option value="price_asc">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
+          <option value="rating_desc">Rating</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="hotel-grid">
+    {% for hotel in hotels %}
+      {% set hue = hue_range[0] + (hue_range[1] - hue_range[0]) * ((hotel.hue % 40) / 40) %}
+      <div class="hotel-card" data-hotel-name="{{ hotel.name }}">
+        <div class="hotel-photo" style="background-image: linear-gradient(135deg, hsl({{ hue }}, 55%, 55%), hsl({{ hue + 25 }}, 60%, 35%));">
+          <span class="badge">{{ hotel.room_type }}</span>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-name">{{ hotel.name }}</div>
+          <div class="room-type">{{ hotel.occupancy }} &middot; Stay date {{ hotel.stay_date }}</div>
+          <div class="hotel-meta">
+            <span class="rating">&#9733; {{ hotel.rating }} / 5</span>
+            <div class="price-block">
+              {% if hotel.available %}
+                <div class="price" data-price="{{ hotel.price }}">{{ hotel.currency }} {{ hotel.price }}</div>
+                <div class="price-sub">per night, taxes included</div>
+              {% else %}
+                <div class="unavailable">Sold Out</div>
+              {% endif %}
+            </div>
+          </div>
+          {% if hotel.promo %}
+            <div class="promo">{{ hotel.promo }}</div>
+          {% endif %}
+          {% if hotel.available %}
+            <button class="book-btn" data-action="book">Book Now</button>
+          {% else %}
+            <button class="book-btn" disabled>Sold Out</button>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  </div>
+  {{ chrome.pagefooter() }}
+</body>
+</html>

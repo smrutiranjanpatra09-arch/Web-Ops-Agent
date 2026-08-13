@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ name }} — Partner Updates</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  {% import "_chrome.html" as chrome %}
+  {{ chrome.topbar() }}
+  <div class="container">
+    <div class="breadcrumb"><a href="/">&larr; Back to destinations</a></div>
+    <h1 class="page-title">{{ name }}</h1>
+    <div class="result-count">{{ updates|length }} recent update(s) from this partner</div>
+    <div class="update-list" data-partner-name="{{ name }}">
+      {% for update in updates %}
+        <div class="update-item">
+          <div class="update-title">{{ update.title }}</div>
+          <div class="update-meta">Posted by {{ name }}</div>
+          <div class="update-body">{{ update.body }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {{ chrome.pagefooter() }}
+</body>
+</html>

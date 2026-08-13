@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Destination Demand Trends — TripStay</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  {% import "_chrome.html" as chrome %}
+  {{ chrome.topbar() }}
+  <div class="container">
+    <div class="breadcrumb"><a href="/">&larr; Back to destinations</a></div>
+    <h1 class="page-title">Destination Demand Trends</h1>
+    <div class="result-count">{{ trends|length }} destination signal(s) this week</div>
+
+    <!-- Static, server-rendered map of the 5 trend destinations. Purely
+         cosmetic realism for the demo target site: plain inline SVG with no
+         script dependency, so it is fully present in the initial HTML
+         response and cannot delay or alter what Playwright observes
+         (same server-rendered-before-JS guarantee as interactive.js, which
+         only wires cosmetic client-side behavior after DOMContentLoaded). -->
+    <div class="trend-map" data-page="trends-map">
+      <svg viewBox="0 0 300 320" role="img" aria-label="Map of monitored destinations" class="trend-map-svg">
+        <rect x="0" y="0" width="300" height="320" fill="#eef2f6" rx="8"></rect>
+        {% for t in trends %}
+          <g class="trend-pin {{ 'trend-up' if t.direction == 'up' else 'trend-down' }}" data-destination="{{ t.destination }}" transform="translate({{ t.map_x }},{{ t.map_y }})">
+            <circle r="7" class="trend-pin-dot"></circle>
+            <text x="10" y="4" class="trend-pin-label">{{ t.destination }} {{ '▲' if t.direction == 'up' else '▼' }}</text>
+          </g>
+        {% endfor %}
+      </svg>
+    </div>
+
+    <div class="trend-list" data-page="trends">
+      {% for t in trends %}
+        <div class="trend-item" data-destination="{{ t.destination }}">
+          <div>
+            <div class="hotel-name">{{ t.destination }}</div>
+            <div class="room-type">{{ t.signal }}</div>
+          </div>
+          <div class="trend-signal {{ 'trend-up' if t.direction == 'up' else 'trend-down' }}">
+            {{ '▲' if t.direction == 'up' else '▼' }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {{ chrome.pagefooter() }}
+</body>
+</html>

@@ -1,0 +1,37 @@
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 210 20% 98%;
+  --foreground: 215 28% 17%;
+  --card: 0 0% 100%;
+  --card-foreground: 215 28% 17%;
+  --border: 214 20% 88%;
+  --input: 214 20% 88%;
+  --ring: 214 88% 39%;
+  --primary: 221 79% 22%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 214 32% 94%;
+  --secondary-foreground: 215 28% 17%;
+  --muted: 214 25% 95%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 22 100% 59%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 340 82% 52%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 142 60% 38%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 92% 45%;
+  --warning-foreground: 0 0% 100%;
+  --radius: 0.5rem;
+}
+
+body {
+  @apply bg-background text-foreground font-sans;
+}

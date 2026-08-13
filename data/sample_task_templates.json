@@ -1,0 +1,59 @@
+{
+  "templates": [
+    {
+      "template_id": "TPL-HOTEL-PRICING",
+      "name": "Hotel Pricing Watch",
+      "workflow": "hotel_pricing_watch",
+      "description": "Track nightly price, availability, and promo changes on a city's hotel listing page.",
+      "path_template": "/hotels/{entity}",
+      "objective_template": "Track hotel pricing and availability movement for {entity}",
+      "wait_selector": ".hotel-card",
+      "expected_fields": ["hotel_name", "price", "currency", "available", "promo", "rating"],
+      "default_entities": ["Goa", "Jaipur", "Manali"],
+      "default_frequency": "daily",
+      "owner_team": "Revenue Management",
+      "requires_approval": false,
+      "stop_conditions": [
+        "Target page returns non-200 status",
+        "No .hotel-card elements found after wait",
+        "More than 2 consecutive extraction failures"
+      ]
+    },
+    {
+      "template_id": "TPL-CAMPAIGN-MONITOR",
+      "name": "Campaign Page Monitoring",
+      "workflow": "campaign_page_monitoring",
+      "description": "Verify campaign landing page headline, CTA, and validity window for copy changes.",
+      "path_template": "/campaign/{entity}",
+      "objective_template": "Track campaign page changes for {entity}",
+      "wait_selector": ".campaign-card",
+      "expected_fields": ["headline", "cta", "valid_until"],
+      "default_entities": ["monsoon-getaway", "festive-flight-deals"],
+      "default_frequency": "daily",
+      "owner_team": "Growth",
+      "requires_approval": false,
+      "stop_conditions": [
+        "Target page returns non-200 status",
+        "No .campaign-card elements found after wait"
+      ]
+    },
+    {
+      "template_id": "TPL-COMPETITOR-OFFERS",
+      "name": "Competitor Offer Tracking",
+      "workflow": "competitor_offer_tracking",
+      "description": "Monitor a competitor's public offer page for discount and offer-title movement.",
+      "path_template": "/competitor/{entity}",
+      "objective_template": "Track competitor offer changes for {entity}",
+      "wait_selector": ".offer-card",
+      "expected_fields": ["offer_title", "discount_pct"],
+      "default_entities": ["RivalTrip", "OtherBooking"],
+      "default_frequency": "daily",
+      "owner_team": "Strategy",
+      "requires_approval": true,
+      "stop_conditions": [
+        "Target page returns non-200 status",
+        "No .offer-card elements found after wait"
+      ]
+    }
+  ]
+}

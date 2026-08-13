@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TripStay — Plan Your Next Trip</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  {% import "_chrome.html" as chrome %}
+  {{ chrome.topbar() }}
+  <div class="container">
+    <h1 class="page-title">Where are you headed?</h1>
+    <div class="result-count">Browse destinations, campaigns, competitor offers, partner updates and market trends.</div>
+
+    <div class="section-title">Destinations — Hotel Pricing Watch</div>
+    <div class="destination-grid">
+      {% for city in cities %}
+        <a class="dest-card" href="/hotels/{{ city }}">
+          <div class="dest-name">{{ city_labels.get(city, city) }}</div>
+          <div class="dest-sub">View hotel listings & live pricing</div>
+        </a>
+      {% endfor %}
+    </div>
+
+    <div class="section-title">Campaign Pages — Campaign Monitoring</div>
+    <div class="destination-grid">
+      {% for slug in campaigns %}
+        <a class="dest-card" href="/campaign/{{ slug }}">
+          <div class="dest-name">{{ slug.replace('-', ' ')|title }}</div>
+          <div class="dest-sub">View live campaign page</div>
+        </a>
+      {% endfor %}
+    </div>
+
+    <div class="section-title">Competitor Offer Pages — Competitor Tracking</div>
+    <div class="destination-grid">
+      {% for name in competitors %}
+        <a class="dest-card" href="/competitor/{{ name }}">
+          <div class="dest-name">{{ name }}</div>
+          <div class="dest-sub">View current offer</div>
+        </a>
+      {% endfor %}
+    </div>
+
+    <div class="section-title">Partner Pages — Partner Update Review</div>
+    <div class="destination-grid">
+      {% for name in partners %}
+        <a class="dest-card" href="/partner/{{ name }}">
+          <div class="dest-name">{{ name }}</div>
+          <div class="dest-sub">View recent partner updates</div>
+        </a>
+      {% endfor %}
+    </div>
+
+    <div class="section-title">Market Signals — Travel Trend Scanning</div>
+    <div class="destination-grid">
+      <a class="dest-card" href="/trends">
+        <div class="dest-name">Destination Demand Trends</div>
+        <div class="dest-sub">View current signals across all destinations</div>
+      </a>
+    </div>
+  </div>
+  {{ chrome.pagefooter() }}
+</body>
+</html>

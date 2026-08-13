@@ -1,0 +1,47 @@
+{
+  "description": "Prompt templates used by the agent. Kept as data so prompts can be reviewed and versioned without editing Python.",
+  "version": "1.0.0",
+  "templates": {
+    "planner_system": {
+      "used_by": "agents/planner.py",
+      "purpose": "Turn a task objective into a structured, safe browsing plan.",
+      "requires_json_output": true,
+      "output_shape": {
+        "objective": "string",
+        "target_urls": ["string"],
+        "steps": [{"action": "string", "target": "string", "notes": "string"}],
+        "expected_fields": ["string"],
+        "stop_conditions": ["string"],
+        "risk_notes": "string"
+      },
+      "constraints": [
+        "Only ever target the single allowed target page given in the user message.",
+        "Never invent other pages or external domains.",
+        "One step must be action=wait_for_selector with the CSS selector given for this workflow.",
+        "stop_conditions must state what halts the run (page not found, selector absent, repeated extraction failures)."
+      ]
+    },
+    "completion_system": {
+      "used_by": "agents/completion.py",
+      "purpose": "Write a concise operational summary from detected business-relevant changes.",
+      "requires_json_output": true,
+      "output_shape": {
+        "headline": "one sentence, what changed and why it matters",
+        "key_changes": ["short bullet per relevant change"],
+        "recommended_owner": "which team should act (Growth, Revenue Management, Merchandising, Strategy)",
+        "confidence_note": "one sentence noting any uncertainty or low-confidence data",
+        "requires_human_review": "boolean"
+      },
+      "escalation_rules": [
+        "Mark requires_human_review true when price/discount movement exceeds 15%.",
+        "Mark requires_human_review true when any extracted row had low confidence.",
+        "Mark requires_human_review true when the change is ambiguous or the source is unfamiliar."
+      ]
+    }
+  },
+  "fallback_policy": {
+    "description": "If no LLM provider is configured or the call fails, both stages fall back to deterministic logic so the pipeline always completes.",
+    "planner_fallback": "Emit a fixed navigate -> wait_for_selector -> extract plan using the workflow's known selector.",
+    "completion_fallback": "List each business-relevant change as 'entity: change_type (previous -> current)' and flag review if any row was low-confidence."
+  }
+}

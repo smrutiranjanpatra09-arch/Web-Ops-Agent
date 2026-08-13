@@ -1,0 +1,10 @@
+playwright==1.47.0
+beautifulsoup4==4.12.3
+pydantic==2.9.2
+pydantic-settings==2.5.2
+sqlalchemy==2.0.35
+psycopg[binary]==3.2.2
+redis==5.0.8
+rq==2.0.0
+minio==7.2.9
+python-dotenv==1.0.1

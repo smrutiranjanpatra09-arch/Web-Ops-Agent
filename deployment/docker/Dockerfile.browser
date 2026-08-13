@@ -1,0 +1,30 @@
+# Dedicated browser-worker image. Playwright/Chromium runs only in this
+# container - never inside the FastAPI process (engineering guidelines, section 9/10).
+FROM mcr.microsoft.com/playwright/python:v1.47.0-jammy
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+COPY requirements-browser.txt .
+RUN pip install --no-cache-dir -r requirements-browser.txt
+RUN playwright install chromium
+
+COPY browser/ browser/
+COPY mcp/ mcp/
+COPY backend/app/models/ backend/app/models/
+COPY backend/app/schemas/ backend/app/schemas/
+COPY backend/app/database/ backend/app/database/
+COPY backend/app/core/ backend/app/core/
+COPY backend/app/services/state_machine.py backend/app/services/state_machine.py
+COPY backend/app/services/__init__.py backend/app/services/__init__.py
+COPY backend/__init__.py backend/__init__.py
+COPY backend/app/__init__.py backend/app/__init__.py
+COPY extraction/ extraction/
+COPY logger.py utils.py ./
+
+RUN mkdir -p logs
+
+EXPOSE 9222

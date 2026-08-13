@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ name }} — Offer Page</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  {% import "_chrome.html" as chrome %}
+  {{ chrome.topbar() }}
+  <div class="container">
+    <div class="breadcrumb"><a href="/">&larr; Back to destinations</a></div>
+    <h1 class="page-title">{{ name }}</h1>
+    <div class="offer-card" data-competitor-name="{{ name }}">
+      <div class="competitor-name">Current Promotion</div>
+      <div class="offer-title">{{ offer.title }}</div>
+      <div class="discount">{{ offer.discount }}% Off</div>
+      <div class="offer-terms">{{ offer.terms }}</div>
+      <a href="#" class="offer-cta" data-action="cta">View Offer</a>
+    </div>
+  </div>
+  {{ chrome.pagefooter() }}
+</body>
+</html>

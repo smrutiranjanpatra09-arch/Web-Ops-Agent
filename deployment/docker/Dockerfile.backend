@@ -1,0 +1,32 @@
+# Image for api, worker, and scheduler services - no browser runtime needed here,
+# Playwright/Chromium only runs inside the dedicated browser-worker image.
+FROM python:3.12-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends libpq-dev gcc && rm -rf /var/lib/apt/lists/*
+
+COPY requirements-backend.txt .
+RUN pip install --no-cache-dir -r requirements-backend.txt
+
+COPY backend/ backend/
+COPY agents/ agents/
+COPY extraction/ extraction/
+COPY intelligence/ intelligence/
+COPY mcp/ mcp/
+COPY scheduler_service/ scheduler_service/
+COPY mock_site/ mock_site/
+# only the queue-enqueue helper, not browser/actions (needs playwright,
+# which only the browser-worker image installs) - this lets the generic
+# worker dispatch browse jobs onto the browser queue without running them
+COPY browser/__init__.py browser/__init__.py
+COPY browser/jobs.py browser/jobs.py
+COPY logger.py utils.py ./
+
+RUN mkdir -p logs
+
+EXPOSE 8000 5050

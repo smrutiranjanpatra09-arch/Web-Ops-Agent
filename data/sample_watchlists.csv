@@ -1,0 +1,8 @@
+watchlist_id,workflow,entity,target_path,frequency,owner_team,priority,notes
+WL-001,hotel_pricing_watch,Goa,/hotels/Goa,daily,Revenue Management,high,Peak leisure destination - monitor weekend surge pricing
+WL-002,hotel_pricing_watch,Jaipur,/hotels/Jaipur,daily,Revenue Management,medium,Heritage circuit - watch festival season inventory
+WL-003,hotel_pricing_watch,Manali,/hotels/Manali,daily,Revenue Management,medium,Hill station - snow season availability swings
+WL-004,campaign_page_monitoring,monsoon-getaway,/campaign/monsoon-getaway,daily,Growth,high,Active monsoon campaign - verify headline and CTA copy
+WL-005,campaign_page_monitoring,festive-flight-deals,/campaign/festive-flight-deals,weekly,Growth,medium,Festive campaign - check validity window and offer text
+WL-006,competitor_offer_tracking,RivalTrip,/competitor/RivalTrip,daily,Strategy,high,Primary competitor - discount moves drive our response
+WL-007,competitor_offer_tracking,OtherBooking,/competitor/OtherBooking,daily,Strategy,medium,Secondary competitor - track member-exclusive rate changes

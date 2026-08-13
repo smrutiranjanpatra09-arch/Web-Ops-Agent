@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ campaign.headline }} — TripStay Campaign</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  {% import "_chrome.html" as chrome %}
+  {{ chrome.topbar() }}
+  <div class="container">
+    <div class="breadcrumb"><a href="/">&larr; Back to destinations</a></div>
+    <div class="campaign-hero" data-campaign-slug="{{ slug }}">
+      <span class="placement-tag">{{ campaign.placement }}</span>
+      <div class="eyebrow">Limited Time Offer</div>
+      <div class="headline">{{ campaign.headline }}</div>
+      <div class="offer-copy">{{ campaign.offer_copy }}</div>
+      <div class="valid-until">Valid until {{ campaign.valid_until }}</div>
+      <a href="#" class="cta-button" data-action="cta">{{ campaign.cta }}</a>
+    </div>
+  </div>
+  {{ chrome.pagefooter() }}
+</body>
+</html>

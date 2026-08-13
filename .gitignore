@@ -1,0 +1,21 @@
+venv/
+__pycache__/
+*.pyc
+.env
+data/*.db
+data/sample_snapshots/*.png
+mock_site/state.json
+.pytest_cache/
+logs/
+node_modules/
+frontend/dist/
+frontend/node_modules/
+frontend/*.tsbuildinfo
+.alembic_version
+
+# internal spec/tracker docs - kept locally, not published to the remote
+BUILD_STATE.md
+MASTER_SPEC.md
+UPDATEd v2 BLUEPRINT.md
+CLAUDE.md
+project-overview/
