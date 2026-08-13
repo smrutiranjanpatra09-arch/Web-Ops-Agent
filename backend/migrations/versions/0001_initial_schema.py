@@ -23,7 +23,7 @@ depends_on = None
 # already being silently created by this create_all() before those migrations
 # ever ran, which only stayed hidden because no environment had run 0001 fresh
 # against today's models until a clean-DB hardening pass exercised it.
-_TABLES_ADDED_LATER = {"run_summaries", "model_invocations"}
+_TABLES_ADDED_LATER = {"run_summaries", "model_invocations", "chat_sessions", "chat_messages"}
 
 
 def upgrade() -> None:
@@ -39,6 +39,12 @@ def upgrade() -> None:
     # users.password_hash belongs to migration 0003 - drop it here so 0003's
     # ADD COLUMN remains valid on a fresh database.
     op.drop_column("users", "password_hash")
+    # runs.archived/archived_at/archived_by and evidence.artifact_purged belong
+    # to migration 0006 - drop them here for the same reason.
+    op.drop_column("runs", "archived_by")
+    op.drop_column("runs", "archived_at")
+    op.drop_column("runs", "archived")
+    op.drop_column("evidence", "artifact_purged")
 
 
 def downgrade() -> None:
