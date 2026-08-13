@@ -9,7 +9,7 @@ set -Eeuo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-mmt-ops-agent}"
+COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-}"
 WAIT_TIMEOUT_SECONDS="${WAIT_TIMEOUT_SECONDS:-600}"
 NO_BUILD=0
 FOLLOW_LOGS=0
@@ -48,7 +48,13 @@ done
 log()  { printf '\n\033[1;34m%s\033[0m\n' "$1"; }
 fail() { printf '\n\033[1;31m%s\033[0m\n' "$1" >&2; exit 1; }
 require_command() { command -v "$1" >/dev/null 2>&1 || fail "Missing required command: $1"; }
-compose() { COMPOSE_PROJECT_NAME="$COMPOSE_PROJECT_NAME" docker compose "$@"; }
+compose() {
+  if [[ -n "$COMPOSE_PROJECT_NAME" ]]; then
+    COMPOSE_PROJECT_NAME="$COMPOSE_PROJECT_NAME" docker compose "$@"
+  else
+    docker compose "$@"
+  fi
+}
 
 ensure_env() {
   if [[ ! -f .env ]]; then
@@ -104,8 +110,17 @@ wait_for_url "Mock site"             "http://localhost:5050/"
 wait_for_url "MinIO console"         "http://localhost:9001/"
 wait_for_url "Frontend"              "http://localhost:5173"
 
+log "Applying database migrations (idempotent, safe to re-run)."
+compose exec -T api alembic -c backend/alembic.ini upgrade head \
+  || fail "Migrations failed. Run: docker compose logs api"
+
 log "Seeding demo users (idempotent, safe to re-run)."
-compose exec -T api python -m backend.seed_users || log "Seed skipped (already seeded or not needed)."
+compose exec -T api python -m backend.seed_users \
+  || fail "Seeding demo users failed. Run: docker compose logs api"
+
+log "Registering the mock site as an allowlisted Source (idempotent, safe to re-run)."
+compose exec -T api python -m backend.seed_sources \
+  || fail "Seeding source registry failed. Run: docker compose logs api"
 
 log "Localhost is ready."
 cat <<'URLS'
